@@ -1,0 +1,1 @@
+repo para desplegar un proyecto js con GitHub pages y un dominio propio
