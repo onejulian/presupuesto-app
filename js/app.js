@@ -1,11 +1,11 @@
 const ingresos = [
-    new Ingreso('Salario', 2100.00),
-    new Ingreso('Venta coche', 1500)
+    new Ingreso('Salario', 2700000.00),
+    new Ingreso('Venta criptomonedas', 230000.00)
 ];
 
 const egresos = [
-    new Egreso('Renta departamento', 900),
-    new Egreso('Ropa', 400)
+    new Egreso('Renta departamento', 350000.00),
+    new Egreso('Comida', 600000.00)
 ];
 
 let cargarApp = ()=>{
@@ -40,7 +40,7 @@ let cargarCabecero = ()=>{
 }
 
 const formatoMoneda = (valor)=>{
-    return valor.toLocaleString('es-ES',{style:'currency', currency:'EUR', minimumFractionDigits:2});
+    return valor.toLocaleString('es-CO',{style:'currency', currency:'COP', minimumFractionDigits:2});
 }
 
 const formatoPorcentaje = (valor)=>{
