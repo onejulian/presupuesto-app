@@ -80,6 +80,18 @@ let cargarApp = ()=>{
         }
     });
     
+    // Formateo del input de valor
+    const inputValor = document.getElementById('valor');
+    inputValor.addEventListener('input', formatearInputValor);
+    inputValor.addEventListener('focus', function(){
+        if(this.value === ''){
+            this.placeholder = '0';
+        }
+    });
+    inputValor.addEventListener('blur', function(){
+        this.placeholder = '$ Valor';
+    });
+    
     // Manejar shortcuts de la PWA
     manejarShortcuts();
     
@@ -121,6 +133,49 @@ const formatoPorcentaje = (valor)=>{
         return '0.00%';
     }
     return valor.toLocaleString('en-US',{style:'percent', minimumFractionDigits:2});
+}
+
+// Función para formatear el input de valor con puntos de miles
+const formatearInputValor = (e)=>{
+    let input = e.target;
+    let valor = input.value;
+    
+    // Remover todo excepto dígitos
+    valor = valor.replace(/\D/g, '');
+    
+    // Si está vacío, limpiar
+    if(valor === ''){
+        input.value = '';
+        return;
+    }
+    
+    // Convertir a número y formatear con puntos de miles
+    let numero = parseInt(valor, 10);
+    input.value = numero.toLocaleString('es-CO');
+    
+    // Guardar la posición del cursor
+    let cursorPos = input.selectionStart;
+    let valorAnterior = input.value;
+    
+    // Ajustar la posición del cursor después del formateo
+    setTimeout(() => {
+        let puntosDespues = (input.value.match(/\./g) || []).length;
+        let puntosAntes = (valorAnterior.match(/\./g) || []).length;
+        if(puntosDespues > puntosAntes){
+            input.setSelectionRange(cursorPos + 1, cursorPos + 1);
+        }
+    }, 0);
+}
+
+// Función para parsear el valor formateado y obtener el número
+const parsearValor = (valorFormateado)=>{
+    if(!valorFormateado || valorFormateado === ''){
+        return 0;
+    }
+    // Remover todos los puntos de miles
+    let valorSinPuntos = valorFormateado.replace(/\./g, '');
+    // Convertir a número
+    return parseFloat(valorSinPuntos) || 0;
 }
 
 const cargarIngresos = ()=>{
@@ -198,19 +253,23 @@ let agregarDato = ()=>{
     let descripcion = forma['descripcion'];
     let valor = forma['valor'];
     if(descripcion.value !== '' && valor.value !== ''){
-        if(tipo.value === 'ingreso'){
-            ingresos.push( new Ingreso(descripcion.value, +valor.value));
-            guardarEnLocalStorage();
-            cargarCabecero();
-            cargarIngresos();
+        // Parsear el valor formateado
+        let valorNumerico = parsearValor(valor.value);
+        if(valorNumerico > 0){
+            if(tipo.value === 'ingreso'){
+                ingresos.push( new Ingreso(descripcion.value, valorNumerico));
+                guardarEnLocalStorage();
+                cargarCabecero();
+                cargarIngresos();
+            }
+            else if(tipo.value === 'egreso'){
+               egresos.push( new Egreso(descripcion.value, valorNumerico));
+               guardarEnLocalStorage();
+               cargarCabecero();
+               cargarEgresos();
+            }
+            limpiarFormulario();
         }
-        else if(tipo.value === 'egreso'){
-           egresos.push( new Egreso(descripcion.value, +valor.value));
-           guardarEnLocalStorage();
-           cargarCabecero();
-           cargarEgresos();
-        }
-        limpiarFormulario();
     }
 }
 
