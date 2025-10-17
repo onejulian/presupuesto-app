@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de colores modo oscuro elegante */
+  --color-dark-bg: #0a0e27;
+  --color-dark-card: #151b3d;
+  --color-dark-card-hover: #1a2147;
+  --color-dark-border: #1e2851;
+  --color-ingreso: #10b981;
+  --color-ingreso-dark: #059669;
+  --color-egreso: #ef4444;
+  --color-egreso-dark: #dc2626;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #9ca3af;
+}
+
+/* Gradiente elegante para el header */
+.gradient-header-dark {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+/* Efecto glassmorphism para tarjetas */
+.glass-card {
+  background: rgba(21, 27, 61, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Sombras suaves para profundidad */
+.shadow-elegant {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-elegant-hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}

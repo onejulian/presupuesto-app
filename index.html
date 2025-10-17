@@ -1,107 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación Presupuesto</title>
-    <link href="css/estilos.css" rel='stylesheet'/>
+    <title>Presupuesto Personal</title>
+    <link href="css/output.css" rel='stylesheet'/>
 </head>
-<body onload='cargarApp()'>
-    <div class="cabecero">
-        <div class="presupuesto">
-            <div class="presupuesto_titulo">
-                Presupuesto Disponible
+<body onload='cargarApp()' class="min-h-screen" style="background-color: #0a0e27;">
+    
+    <!-- Cabecero Elegante con Gradiente -->
+    <div class="gradient-header-dark min-h-[50vh] w-full pt-16 pb-12 md:pt-24 md:pb-16 text-white relative overflow-hidden">
+        <!-- Efecto de overlay sutil -->
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        
+        <div class="relative max-w-5xl mx-auto px-4 pt-12 md:pt-16">
+            <!-- Título principal -->
+            <div class="text-center mb-12 md:mb-16">
+                <h1 class="text-3xl md:text-4xl font-light mb-2 tracking-wide">Gestión de Presupuesto</h1>
+                <p class="text-sm md:text-base opacity-80 font-light">Controla tus finanzas de manera inteligente</p>
             </div>
-            <div class="presupuesto_valor" id='presupuesto'>+ 2,000.00</div>
-            <div class="presupuesto_ingreso limpiarEstilos">
-                <div class="presupuesto_ingreso--texto">Ingresos</div>
-                <div class="derecha">
-                    <div class="presupuesto_ingreso--valor" id='ingresos'>+4,000.00</div>
-                    <div class="presupuesto_ingreso--porcentaje">&nbsp;</div>
+            
+            <!-- Card de Presupuesto Principal -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 shadow-elegant max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="text-sm md:text-base uppercase tracking-widest mb-3 opacity-75 font-light">
+                        Balance Disponible
+                    </div>
+                    <div class="text-5xl md:text-6xl font-light mb-6 tracking-tight" id='presupuesto'>
+                        + 2,000.00
+                    </div>
                 </div>
-            </div>
-            <div class="presupuesto_egreso limpiarEstilos">
-                <div class="presupuesto_egreso--texto">Egresos</div>
-                <div class="derecha limpiarEstilos">
-                    <div class="presupuesto_egreso--valor" id='egresos'>- 1,900.00</div>
-                    <div class="presupuesto_egreso--porcentaje" id='porcentaje'>45%</div>
+                
+                <!-- Tarjetas de Ingresos y Egresos -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <!-- Ingresos -->
+                    <div class="rounded-xl p-4 md:p-5 transition-all hover:scale-105" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="text-xs uppercase tracking-wider mb-2 opacity-90">Ingresos</div>
+                                <div class="text-2xl md:text-3xl font-light" id='ingresos'>+4,000.00</div>
+                            </div>
+                            <div class="text-3xl opacity-80">
+                                <ion-icon name="trending-up-outline"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Egresos -->
+                    <div class="rounded-xl p-4 md:p-5 transition-all hover:scale-105" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="text-xs uppercase tracking-wider mb-2 opacity-90">Egresos</div>
+                                <div class="text-2xl md:text-3xl font-light" id='egresos'>- 1,900.00</div>
+                            </div>
+                            <div class="text-3xl opacity-80">
+                                <ion-icon name="trending-down-outline"></ion-icon>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-sm opacity-90">
+                            <span id='porcentaje'>45%</span> del ingreso
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <form id='forma' onsubmit="return false;">
-        <div class="agregar">
-            <div class="agregar_contenedor">
-                <select class='agregar_tipo' id='tipo'>
-                    <option value='ingreso' selected>+</option>
-                    <option value='egreso'>-</option>
-                </select>
-                <input type='text' class='agregar_descripcion'
-                placeholder="Agregar Descripción" id='descripcion'/>
-                <input type='number' class='agregar_valor'
-                placeholder="Valor" id='valor' step='any'/>
-                <button class='agregar_btn' onclick="agregarDato()">
-                    <ion-icon name="checkmark-circle-outline"></ion-icon>
-                </button>
+    <!-- Formulario de entrada con diseño elegante -->
+    <form id='forma' onsubmit="return false;" class="py-8 md:py-10" style="background-color: #0a0e27;">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="glass-card rounded-xl p-6 md:p-8 shadow-elegant">
+                <h2 class="text-white text-lg md:text-xl font-light mb-6 text-center tracking-wide">Nueva Transacción</h2>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+                    <select class='w-auto border-2 h-12 text-base rounded-lg px-3 font-light transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/10 text-white backdrop-blur-sm' id='tipo'>
+                        <option value='ingreso' style="background-color: #151b3d; color: white;">+ Ingreso</option>
+                        <option value='egreso' style="background-color: #151b3d; color: white;">- Egreso</option>
+                    </select>
+                    <input 
+                        type='text' 
+                        class='flex-1 sm:max-w-md border-2 h-12 text-sm px-4 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/10 text-white placeholder-gray-400 backdrop-blur-sm'
+                        placeholder="Descripción de la transacción" 
+                        id='descripcion'/>
+                    <input 
+                        type='number' 
+                        class='w-full sm:w-32 border-2 h-12 text-sm px-4 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/10 text-white placeholder-gray-400 backdrop-blur-sm'
+                        placeholder="$ Valor" 
+                        id='valor' 
+                        step='any'/>
+                    <button 
+                        type="button"
+                        class='h-12 px-6 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-lg' 
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+                        onclick="agregarDato()">
+                        <span class="flex items-center gap-2 text-white">
+                            <ion-icon name="add-circle-outline" class="text-xl"></ion-icon>
+                            <span class="hidden sm:inline">Agregar</span>
+                        </span>
+                    </button>
+                </div>
             </div>
         </div>
     </form>
 
-    <div class="contenedor limpiarEstilos">
-        <div class="ingreso">
-            <h2 class='ingreso_titulo'>Ingresos</h2>
-            <div id='lista-ingresos'>
-                <div class="elemento limpiarEstilos">
-                    <div class="elemento_descripcion">Salario</div>
-                    <div class="derecha limpiarEstilos">
-                        <div class="elemento_valor">+ 2,200.00</div>
-                        <div class="elemento_eliminar">
-                            <button class='elemento_eliminar--btn'>
-                                <ion-icon name="close-circle-outline"></ion-icon>
-                            </button>
+    <!-- Contenedor de listas con diseño moderno -->
+    <div class="max-w-7xl mx-auto px-4 pb-16 md:pb-20" style="background-color: #0a0e27;">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <!-- Lista de Ingresos -->
+            <div class="w-full">
+                <div class="glass-card rounded-xl p-6 md:p-8 shadow-elegant">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <ion-icon name="arrow-up-outline"></ion-icon>
                         </div>
+                        <h2 class='text-xl md:text-2xl font-light text-white tracking-wide'>Ingresos</h2>
                     </div>
-                </div>
-                <div class="elemento limpiarEstilos">
-                    <div class="elemento_descripcion">Venta coche</div>
-                    <div class="derecha limpiarEstilos">
-                        <div class="elemento_valor">+ 1,500.00</div>
-                        <div class="elemento_eliminar">
-                            <button class='elemento_eliminar--btn'>
-                                <ion-icon name="close-circle-outline"></ion-icon>
-                            </button>
-                        </div>
+                    <div id='lista-ingresos' class="space-y-2">
+                        <!-- Los ingresos se cargarán dinámicamente aquí -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="egreso">
-            <h2 class='egreso_titulo'>Egresos</h2>
-            <div id='lista-egresos'>
-                <div class="elemento limpiarEstilos">
-                    <div class="elemento_descripcion">Renta departamento</div>
-                    <div class="derecha limpiarEstilos">
-                        <div class="elemento_valor">- 900.00</div>
-                        <div class="elemento_porcentaje">21%</div>
-                        <div class="elemento_eliminar">
-                            <button class='elemento_eliminar--btn'>
-                                <ion-icon name="close-circle-outline"></ion-icon>
-                            </button>
+            
+            <!-- Lista de Egresos -->
+            <div class="w-full">
+                <div class="glass-card rounded-xl p-6 md:p-8 shadow-elegant">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                            <ion-icon name="arrow-down-outline"></ion-icon>
                         </div>
+                        <h2 class='text-xl md:text-2xl font-light text-white tracking-wide'>Egresos</h2>
                     </div>
-                </div>
-                <div class="elemento limpiarEstilos">
-                    <div class="elemento_descripcion">Ropa</div>
-                    <div class="derecha limpiarEstilos">
-                        <div class="elemento_valor">- 400.00</div>
-                        <div class="elemento_porcentaje">10%</div>
-                        <div class="elemento_eliminar">
-                            <button class='elemento_eliminar--btn'>
-                                <ion-icon name="close-circle-outline"></ion-icon>
-                            </button>
-                        </div>
+                    <div id='lista-egresos' class="space-y-2">
+                        <!-- Los egresos se cargarán dinámicamente aquí -->
                     </div>
                 </div>
             </div>

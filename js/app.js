@@ -1,11 +1,11 @@
 const ingresos = [
-    new Ingreso('Salario', 2700000.00),
-    new Ingreso('Venta criptomonedas', 230000.00)
+    // new Ingreso('Salario', 2700000.00),
+    // new Ingreso('Venta criptomonedas', 230000.00)
 ];
 
 const egresos = [
-    new Egreso('Renta departamento', 350000.00),
-    new Egreso('Comida', 600000.00)
+    // new Egreso('Renta departamento', 350000.00),
+    // new Egreso('Comida', 600000.00)
 ];
 
 let cargarApp = ()=>{
@@ -44,6 +44,9 @@ const formatoMoneda = (valor)=>{
 }
 
 const formatoPorcentaje = (valor)=>{
+    if(isNaN(valor)){
+        return '0.00%';
+    }
     return valor.toLocaleString('en-US',{style:'percent', minimumFractionDigits:2});
 }
 
@@ -57,18 +60,18 @@ const cargarIngresos = ()=>{
 
 const crearIngresoHTML = (ingreso)=>{
     let ingresoHTML = `
-    <div class="elemento limpiarEstilos">
-    <div class="elemento_descripcion">${ingreso.descripcion}</div>
-    <div class="derecha limpiarEstilos">
-        <div class="elemento_valor">+ ${formatoMoneda(ingreso.valor)}</div>
-        <div class="elemento_eliminar">
-            <button class='elemento_eliminar--btn'>
-                <ion-icon name="close-circle-outline"
-                onclick='eliminarIngreso(${ingreso.id})'></ion-icon>
+    <div class="group py-4 px-5 rounded-lg flex justify-between items-center transition-all hover:bg-white/5 hover:shadow-lg border border-white/5 hover:border-emerald-500/30 backdrop-blur-sm">
+        <div class="flex items-center gap-3 flex-1">
+            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <div class="text-gray-200 font-light">${ingreso.descripcion}</div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="text-emerald-400 font-medium transition-all group-hover:scale-110 group-hover:text-emerald-300">+ ${formatoMoneda(ingreso.valor)}</div>
+            <button class='hidden group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
+                <ion-icon name="trash-outline" onclick='eliminarIngreso(${ingreso.id})'></ion-icon>
             </button>
         </div>
     </div>
-</div>
     `;
     return ingresoHTML;
 }
@@ -90,19 +93,19 @@ const cargarEgresos = ()=>{
 
 const crearEgresoHTML = (egreso)=>{
     let egresoHTML = `
-    <div class="elemento limpiarEstilos">
-    <div class="elemento_descripcion">${egreso.descripcion}</div>
-    <div class="derecha limpiarEstilos">
-        <div class="elemento_valor">- ${formatoMoneda(egreso.valor)}</div>
-        <div class="elemento_porcentaje">${formatoPorcentaje(egreso.valor/totalEgresos())}</div>
-        <div class="elemento_eliminar">
-            <button class='elemento_eliminar--btn'>
-                <ion-icon name="close-circle-outline"
-                onclick='eliminarEgreso(${egreso.id})'></ion-icon>
+    <div class="group py-4 px-5 rounded-lg flex justify-between items-center transition-all hover:bg-white/5 hover:shadow-lg border border-white/5 hover:border-red-500/30 backdrop-blur-sm">
+        <div class="flex items-center gap-3 flex-1">
+            <div class="w-2 h-2 rounded-full bg-red-500"></div>
+            <div class="text-gray-200 font-light">${egreso.descripcion}</div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="text-red-400 font-medium transition-all group-hover:scale-110 group-hover:text-red-300">- ${formatoMoneda(egreso.valor)}</div>
+            <div class="text-xs bg-red-500/20 text-red-300 py-1 px-2 rounded-md min-w-[3rem] text-center font-medium">${formatoPorcentaje(egreso.valor/totalIngresos())}</div>
+            <button class='hidden group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
+                <ion-icon name="trash-outline" onclick='eliminarEgreso(${egreso.id})'></ion-icon>
             </button>
         </div>
     </div>
-</div>
     `;
     return egresoHTML;
 }
@@ -130,5 +133,10 @@ let agregarDato = ()=>{
            cargarCabecero();
            cargarEgresos();
         }
+        limpiarFormulario();
     }
+}
+
+let limpiarFormulario = ()=>{
+    document.getElementById('forma').reset();
 }

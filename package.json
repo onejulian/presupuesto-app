@@ -1,0 +1,26 @@
+{
+  "name": "presupuesto-app",
+  "version": "1.0.0",
+  "description": "repo para desplegar un proyecto js con GitHub pages y un dominio propio",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/input.css -o ./css/output.css --minify",
+    "watch:css": "tailwindcss -i ./css/input.css -o ./css/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onejulian/presupuesto-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onejulian/presupuesto-app/issues"
+  },
+  "homepage": "https://github.com/onejulian/presupuesto-app#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.14",
+    "tailwindcss": "^4.1.14"
+  }
+}
