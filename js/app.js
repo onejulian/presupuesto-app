@@ -399,6 +399,18 @@ const crearFooterPWA = () => {
                         <span class="hidden sm:inline text-xs opacity-70 ml-1">• Acceso rápido</span>
                     </button>
                 </div>
+                
+                <!-- Sección de actualización (oculta por defecto) -->
+                <div id="update-section" style="display: none;">
+                    <button 
+                        onclick="window.updatePWA()" 
+                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-white-600/20 to-white-500/20 hover:from-white-600/30 hover:to-white-500/30 text-white-300 hover:text-white-200 rounded-lg transition-all duration-300 border border-white-500/20 hover:border-white-500/40"
+                    >
+                        <ion-icon name="refresh-outline" class="text-lg group-hover:scale-110 transition-transform"></ion-icon>
+                        <span class="text-sm font-medium">Actualizar App</span>
+                        <span class="hidden sm:inline text-xs opacity-70 ml-1">• Nueva versión disponible</span>
+                    </button>
+                </div>
             </div>
         </div>
     `;

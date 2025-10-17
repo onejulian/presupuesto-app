@@ -194,6 +194,9 @@
     
     <!-- Service Worker Registration -->
     <script>
+        // Variable global para almacenar el nuevo service worker
+        let newServiceWorker = null;
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
@@ -210,10 +213,26 @@
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // Nuevo service worker disponible, notificar al usuario
-                                    if (confirm('Nueva versión disponible. ¿Deseas actualizar?')) {
-                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                        window.location.reload();
+                                    // Guardar referencia al nuevo worker
+                                    newServiceWorker = newWorker;
+                                    
+                                    // Verificar si la app está instalada
+                                    const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
+                                                       window.navigator.standalone || 
+                                                       document.referrer.includes('android-app://');
+                                    
+                                    if (isInstalled) {
+                                        // Si la app está instalada, mostrar botón de actualización
+                                        const updateSection = document.getElementById('update-section');
+                                        if (updateSection) {
+                                            updateSection.style.display = 'block';
+                                        }
+                                    } else {
+                                        // Si no está instalada, usar el confirm tradicional
+                                        if (confirm('Nueva versión disponible. ¿Deseas actualizar?')) {
+                                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                            window.location.reload();
+                                        }
                                     }
                                 }
                             });
@@ -223,6 +242,14 @@
                         console.error('Error al registrar el Service Worker:', error);
                     });
             });
+            
+            // Función para actualizar la PWA
+            window.updatePWA = () => {
+                if (newServiceWorker) {
+                    newServiceWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                }
+            };
             
             // Detectar cuando la app vuelve a estar online
             window.addEventListener('online', () => {
