@@ -321,7 +321,7 @@ const inicializarPWA = () => {
 // Crear footer elegante con opción de instalación PWA
 const crearFooterPWA = () => {
     const footer = document.createElement('footer');
-    footer.className = 'fixed bottom-0 left-0 right-0 z-30';
+    footer.className = 'bottom-0 left-0 right-0 z-30';
     footer.style.background = 'linear-gradient(to top, rgba(10, 14, 39, 0.95), rgba(10, 14, 39, 0.8))';
     footer.style.backdropFilter = 'blur(10px)';
     footer.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
@@ -339,12 +339,6 @@ const crearFooterPWA = () => {
                         <span class="text-sm font-medium">Instalar App</span>
                         <span class="hidden sm:inline text-xs opacity-70 ml-1">• Acceso rápido</span>
                     </button>
-                </div>
-                
-                <!-- Información adicional cuando la app está instalada -->
-                <div id="installed-info" style="display: none;" class="flex items-center gap-2 text-xs text-green-400">
-                    <ion-icon name="checkmark-circle"></ion-icon>
-                    <span>App instalada</span>
                 </div>
             </div>
         </div>
