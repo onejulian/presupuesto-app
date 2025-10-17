@@ -10,11 +10,11 @@
 <body onload='cargarApp()' class="min-h-screen" style="background-color: #0a0e27;">
     
     <!-- Cabecero Elegante con Gradiente -->
-    <div class="gradient-header-dark min-h-[50vh] w-full pt-16 pb-12 md:pt-24 md:pb-16 text-white relative overflow-hidden">
+    <div class="gradient-header-dark min-h-[50vh] w-full pt-12 pb-12 md:pt-12 md:pb-16 text-white relative overflow-hidden">
         <!-- Efecto de overlay sutil -->
         <div class="absolute inset-0 bg-black opacity-20"></div>
         
-        <div class="relative max-w-5xl mx-auto px-4 pt-12 md:pt-16">
+        <div class="relative max-w-5xl mx-auto px-4 pt-4">
             <!-- Título principal -->
             <div class="text-center mb-12 md:mb-16">
                 <h1 class="text-3xl md:text-4xl font-light mb-2 tracking-wide">Gestión de Presupuesto</h1>
@@ -115,7 +115,7 @@
                         </div>
                         <h2 class='text-xl md:text-2xl font-light text-white tracking-wide'>Ingresos</h2>
                     </div>
-                    <div id='lista-ingresos' class="space-y-2">
+                    <div id='lista-ingresos' class="space-y-2 scroll-container">
                         <!-- Los ingresos se cargarán dinámicamente aquí -->
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                         </div>
                         <h2 class='text-xl md:text-2xl font-light text-white tracking-wide'>Egresos</h2>
                     </div>
-                    <div id='lista-egresos' class="space-y-2">
+                    <div id='lista-egresos' class="space-y-2 scroll-container">
                         <!-- Los egresos se cargarán dinámicamente aquí -->
                     </div>
                 </div>

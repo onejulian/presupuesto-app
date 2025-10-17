@@ -34,3 +34,16 @@
 .shadow-elegant-hover {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
+
+/* Contenedor con scroll invisible */
+.scroll-container {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+
+/* Ocultar scrollbar en Chrome, Safari y Opera */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
