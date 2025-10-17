@@ -329,15 +329,6 @@ const crearFooterPWA = () => {
     footer.innerHTML = `
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col sm:flex-row items-center justify-between text-gray-400 text-sm">
-                <div class="flex items-center gap-4 mb-2 sm:mb-0">
-                    <span class="flex items-center gap-2">
-                        <ion-icon name="wallet-outline" class="text-white-500"></ion-icon>
-                        <span class="font-light">Presupuesto Personal</span>
-                    </span>
-                    <span class="hidden sm:inline text-gray-600">|</span>
-                    <span class="text-xs">© ${new Date().getFullYear()}</span>
-                </div>
-                
                 <!-- Sección de instalación (oculta por defecto) -->
                 <div id="install-section" style="display: none;">
                     <button 
