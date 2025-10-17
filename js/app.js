@@ -237,31 +237,37 @@ const manejarShortcuts = () => {
 
 // Función para inicializar funcionalidad PWA
 const inicializarPWA = () => {
-    // Botón de instalación personalizado
+    // Crear footer con opción de instalación
+    crearFooterPWA();
+    
+    // Manejar instalación de PWA
     let deferredPrompt;
-    const installButton = document.createElement('button');
-    installButton.innerHTML = '<ion-icon name="download-outline"></ion-icon> Instalar App';
-    installButton.className = 'fixed bottom-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-lg shadow-lg hidden items-center gap-2 hover:bg-purple-700 transition-all z-50';
-    installButton.style.display = 'none';
-    document.body.appendChild(installButton);
     
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installButton.style.display = 'flex';
+        // Mostrar el footer con opción de instalación
+        const installSection = document.getElementById('install-section');
+        if(installSection) {
+            installSection.style.display = 'block';
+        }
     });
     
-    installButton.addEventListener('click', async () => {
+    // Listener para el botón de instalación en el footer
+    window.installPWA = async () => {
         if(deferredPrompt){
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             console.log(`Usuario eligió: ${outcome}`);
             if(outcome === 'accepted'){
-                installButton.style.display = 'none';
+                const installSection = document.getElementById('install-section');
+                if(installSection) {
+                    installSection.style.display = 'none';
+                }
             }
             deferredPrompt = null;
         }
-    });
+    };
     
     // Detectar si la app está instalada
     if (window.matchMedia('(display-mode: standalone)').matches || 
@@ -307,41 +313,71 @@ const inicializarPWA = () => {
         });
     }
     
-    // Solicitar permiso para notificaciones (opcional)
-    if ('Notification' in window && Notification.permission === 'default') {
-        // Crear un botón para solicitar permisos de notificación
-        const notifButton = document.createElement('button');
-        notifButton.innerHTML = '<ion-icon name="notifications-outline"></ion-icon>';
-        notifButton.className = 'fixed top-4 right-4 bg-gray-700 text-white p-2 rounded-full shadow-lg hover:bg-gray-600 transition-all z-40';
-        notifButton.title = 'Activar notificaciones';
-        document.body.appendChild(notifButton);
-        
-        notifButton.addEventListener('click', async () => {
-            const permission = await Notification.requestPermission();
-            if(permission === 'granted'){
-                new Notification('Presupuesto Personal', {
-                    body: 'Notificaciones activadas exitosamente',
-                    icon: '/img/icon-192x192.png',
-                    badge: '/img/icon-72x72.png'
-                });
-                notifButton.style.display = 'none';
-            }
-        });
-        
-        // Ocultar el botón si ya tiene permisos
-        if(Notification.permission !== 'default'){
-            notifButton.style.display = 'none';
-        }
-    }
     
     // Exportar/Importar datos
     // agregarBotonesBackup();
 };
 
+// Crear footer elegante con opción de instalación PWA
+const crearFooterPWA = () => {
+    const footer = document.createElement('footer');
+    footer.className = 'fixed bottom-0 left-0 right-0 z-30';
+    footer.style.background = 'linear-gradient(to top, rgba(10, 14, 39, 0.95), rgba(10, 14, 39, 0.8))';
+    footer.style.backdropFilter = 'blur(10px)';
+    footer.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
+    
+    footer.innerHTML = `
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex flex-col sm:flex-row items-center justify-between text-gray-400 text-sm">
+                <div class="flex items-center gap-4 mb-2 sm:mb-0">
+                    <span class="flex items-center gap-2">
+                        <ion-icon name="wallet-outline" class="text-purple-500"></ion-icon>
+                        <span class="font-light">Presupuesto Personal</span>
+                    </span>
+                    <span class="hidden sm:inline text-gray-600">|</span>
+                    <span class="text-xs">© ${new Date().getFullYear()}</span>
+                </div>
+                
+                <!-- Sección de instalación (oculta por defecto) -->
+                <div id="install-section" style="display: none;">
+                    <button 
+                        onclick="window.installPWA()" 
+                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-purple-500/20 hover:from-purple-600/30 hover:to-purple-500/30 text-purple-300 hover:text-purple-200 rounded-lg transition-all duration-300 border border-purple-500/20 hover:border-purple-500/40"
+                    >
+                        <ion-icon name="download-outline" class="text-lg group-hover:scale-110 transition-transform"></ion-icon>
+                        <span class="text-sm font-medium">Instalar App</span>
+                        <span class="hidden sm:inline text-xs opacity-70 ml-1">• Acceso rápido</span>
+                    </button>
+                </div>
+                
+                <!-- Información adicional cuando la app está instalada -->
+                <div id="installed-info" style="display: none;" class="flex items-center gap-2 text-xs text-green-400">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                    <span>App instalada</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(footer);
+    
+    // El padding del contenedor principal ya está ajustado en el HTML
+    
+    // Detectar si la app ya está instalada
+    if (window.matchMedia('(display-mode: standalone)').matches || 
+        window.navigator.standalone || 
+        document.referrer.includes('android-app://')) {
+        const installedInfo = document.getElementById('installed-info');
+        if(installedInfo) {
+            installedInfo.style.display = 'flex';
+        }
+    }
+};
+
 // Funcionalidad adicional para exportar/importar datos
 const agregarBotonesBackup = () => {
     const backupContainer = document.createElement('div');
-    backupContainer.className = 'fixed bottom-4 left-4 flex flex-col gap-2 z-40';
+    backupContainer.className = 'fixed bottom-16 left-4 flex flex-col gap-2 z-40'; // Ajustado para no interferir con el footer
     
     // Botón de exportar
     const exportBtn = document.createElement('button');
