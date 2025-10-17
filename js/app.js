@@ -331,7 +331,7 @@ const crearFooterPWA = () => {
             <div class="flex flex-col sm:flex-row items-center justify-between text-gray-400 text-sm">
                 <div class="flex items-center gap-4 mb-2 sm:mb-0">
                     <span class="flex items-center gap-2">
-                        <ion-icon name="wallet-outline" class="text-purple-500"></ion-icon>
+                        <ion-icon name="wallet-outline" class="text-white-500"></ion-icon>
                         <span class="font-light">Presupuesto Personal</span>
                     </span>
                     <span class="hidden sm:inline text-gray-600">|</span>
@@ -342,7 +342,7 @@ const crearFooterPWA = () => {
                 <div id="install-section" style="display: none;">
                     <button 
                         onclick="window.installPWA()" 
-                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600/20 to-purple-500/20 hover:from-purple-600/30 hover:to-purple-500/30 text-purple-300 hover:text-purple-200 rounded-lg transition-all duration-300 border border-purple-500/20 hover:border-purple-500/40"
+                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-white-600/20 to-white-500/20 hover:from-white-600/30 hover:to-white-500/30 text-white-300 hover:text-white-200 rounded-lg transition-all duration-300 border border-white-500/20 hover:border-white-500/40"
                     >
                         <ion-icon name="download-outline" class="text-lg group-hover:scale-110 transition-transform"></ion-icon>
                         <span class="text-sm font-medium">Instalar App</span>
