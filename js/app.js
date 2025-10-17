@@ -1,17 +1,84 @@
-const ingresos = [
-    // new Ingreso('Salario', 2700000.00),
-    // new Ingreso('Venta criptomonedas', 230000.00)
-];
+const ingresos = [];
+const egresos = [];
 
-const egresos = [
-    // new Egreso('Renta departamento', 350000.00),
-    // new Egreso('Comida', 600000.00)
-];
+// Funciones para manejar localStorage
+const guardarEnLocalStorage = () => {
+    const datos = {
+        ingresos: ingresos.map(ing => ({
+            id: ing.id,
+            descripcion: ing.descripcion,
+            valor: ing.valor
+        })),
+        egresos: egresos.map(eg => ({
+            id: eg.id,
+            descripcion: eg.descripcion,
+            valor: eg.valor
+        })),
+        contadorIngresos: Ingreso.contadorIngresos,
+        contadorEgresos: Egreso.contadorEgresos
+    };
+    localStorage.setItem('presupuestoApp', JSON.stringify(datos));
+};
+
+const cargarDesdeLocalStorage = () => {
+    const datosGuardados = localStorage.getItem('presupuestoApp');
+    if(datosGuardados){
+        try {
+            const datos = JSON.parse(datosGuardados);
+            
+            // Restaurar contadores
+            if(datos.contadorIngresos !== undefined){
+                Ingreso.contadorIngresos = datos.contadorIngresos;
+            }
+            if(datos.contadorEgresos !== undefined){
+                Egreso.contadorEgresos = datos.contadorEgresos;
+            }
+            
+            // Restaurar ingresos
+            if(datos.ingresos && Array.isArray(datos.ingresos)){
+                datos.ingresos.forEach(item => {
+                    const ingreso = new Ingreso(item.descripcion, item.valor);
+                    // Ajustar el id para que coincida con el guardado
+                    ingreso._id = item.id;
+                    ingresos.push(ingreso);
+                    // Actualizar el contador si el id es mayor
+                    if(item.id > Ingreso.contadorIngresos){
+                        Ingreso.contadorIngresos = item.id;
+                    }
+                });
+            }
+            
+            // Restaurar egresos
+            if(datos.egresos && Array.isArray(datos.egresos)){
+                datos.egresos.forEach(item => {
+                    const egreso = new Egreso(item.descripcion, item.valor);
+                    // Ajustar el id para que coincida con el guardado
+                    egreso._id = item.id;
+                    egresos.push(egreso);
+                    // Actualizar el contador si el id es mayor
+                    if(item.id > Egreso.contadorEgresos){
+                        Egreso.contadorEgresos = item.id;
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error al cargar datos desde localStorage:', error);
+        }
+    }
+};
 
 let cargarApp = ()=>{
+    cargarDesdeLocalStorage();
     cargarCabecero();
     cargarIngresos();
     cargarEgresos();
+    
+    // Event listener para detectar Enter en el formulario
+    document.getElementById('forma').addEventListener('keypress', function(e){
+        if(e.key === 'Enter'){
+            agregarDato();
+        }
+    });
 }
 
 let totalIngresos = ()=>{
@@ -79,6 +146,7 @@ const crearIngresoHTML = (ingreso)=>{
 const eliminarIngreso = (id)=>{
     let indiceEliminar = ingresos.findIndex( ingreso => ingreso.id === id);
     ingresos.splice(indiceEliminar, 1);
+    guardarEnLocalStorage();
     cargarCabecero();
     cargarIngresos();
 }
@@ -113,6 +181,7 @@ const crearEgresoHTML = (egreso)=>{
 let eliminarEgreso = (id)=>{
     let indiceEliminar = egresos.findIndex(egreso => egreso.id === id);
     egresos.splice(indiceEliminar, 1);
+    guardarEnLocalStorage();
     cargarCabecero();
     cargarEgresos();
 }
@@ -125,11 +194,13 @@ let agregarDato = ()=>{
     if(descripcion.value !== '' && valor.value !== ''){
         if(tipo.value === 'ingreso'){
             ingresos.push( new Ingreso(descripcion.value, +valor.value));
+            guardarEnLocalStorage();
             cargarCabecero();
             cargarIngresos();
         }
         else if(tipo.value === 'egreso'){
            egresos.push( new Egreso(descripcion.value, +valor.value));
+           guardarEnLocalStorage();
            cargarCabecero();
            cargarEgresos();
         }
