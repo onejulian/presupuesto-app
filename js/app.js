@@ -455,23 +455,43 @@ const inicializarPWA = () => {
 // Crear footer elegante con opción de instalación PWA
 const crearFooterPWA = () => {
     const footer = document.createElement('footer');
-    footer.className = 'bottom-0 left-0 right-0 z-30';
-    footer.style.background = 'linear-gradient(to top, rgba(10, 14, 39, 0.95), rgba(10, 14, 39, 0.8))';
+    footer.className = 'fixed bottom-0 left-0 right-0 z-30';
+    footer.style.background = 'linear-gradient(to top, rgba(10, 14, 39, 0.98), rgba(10, 14, 39, 0.95))';
     footer.style.backdropFilter = 'blur(10px)';
     footer.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
     
     footer.innerHTML = `
         <div class="max-w-7xl mx-auto px-4 py-3">
-            <div class="flex flex-col sm:flex-row items-center justify-between text-gray-400 text-sm">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                <!-- Botones de Exportar/Importar (siempre visibles) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button 
+                        onclick="exportarDatos()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-white text-sm shadow-md"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"
+                    >
+                        <ion-icon name="download-outline" class="text-lg"></ion-icon>
+                        <span class="hidden sm:inline">Exportar</span>
+                    </button>
+                    <button 
+                        onclick="abrirImportador()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-white text-sm shadow-md"
+                        style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);"
+                    >
+                        <ion-icon name="cloud-upload-outline" class="text-lg"></ion-icon>
+                        <span class="hidden sm:inline">Importar</span>
+                    </button>
+                </div>
+                
                 <!-- Sección de instalación (oculta por defecto) -->
                 <div id="install-section" style="display: none;">
                     <button 
                         onclick="window.installPWA()" 
-                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-white-600/20 to-white-500/20 hover:from-white-600/30 hover:to-white-500/30 text-white-300 hover:text-white-200 rounded-lg transition-all duration-300 border border-white-500/20 hover:border-white-500/40"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-white text-sm shadow-md"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
                     >
-                        <ion-icon name="download-outline" class="text-lg group-hover:scale-110 transition-transform"></ion-icon>
-                        <span class="text-sm font-medium">Instalar App</span>
-                        <span class="hidden sm:inline text-xs opacity-70 ml-1">• Acceso rápido</span>
+                        <ion-icon name="phone-portrait-outline" class="text-lg"></ion-icon>
+                        <span class="hidden sm:inline">Instalar App</span>
                     </button>
                 </div>
                 
@@ -479,11 +499,11 @@ const crearFooterPWA = () => {
                 <div id="update-section" style="display: none;">
                     <button 
                         onclick="window.updatePWA()" 
-                        class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-white-600/20 to-white-500/20 hover:from-white-600/30 hover:to-white-500/30 text-white-300 hover:text-white-200 rounded-lg transition-all duration-300 border border-white-500/20 hover:border-white-500/40"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 active:scale-95 text-white text-sm shadow-md"
+                        style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"
                     >
-                        <ion-icon name="refresh-outline" class="text-lg group-hover:scale-110 transition-transform"></ion-icon>
-                        <span class="text-sm font-medium">Actualizar App</span>
-                        <span class="hidden sm:inline text-xs opacity-70 ml-1">• Nueva versión disponible</span>
+                        <ion-icon name="refresh-outline" class="text-lg"></ion-icon>
+                        <span class="hidden sm:inline">Actualizar</span>
                     </button>
                 </div>
             </div>
@@ -491,8 +511,6 @@ const crearFooterPWA = () => {
     `;
     
     document.body.appendChild(footer);
-    
-    // El padding del contenedor principal ya está ajustado en el HTML
     
     // Detectar si la app ya está instalada
     if (window.matchMedia('(display-mode: standalone)').matches || 
@@ -505,39 +523,18 @@ const crearFooterPWA = () => {
     }
 };
 
-// Funcionalidad adicional para exportar/importar datos
-const agregarBotonesBackup = () => {
-    const backupContainer = document.createElement('div');
-    backupContainer.className = 'fixed bottom-16 left-4 flex flex-col gap-2 z-40'; // Ajustado para no interferir con el footer
-    
-    // Botón de exportar
-    const exportBtn = document.createElement('button');
-    exportBtn.innerHTML = '<ion-icon name="download-outline"></ion-icon> Exportar';
-    exportBtn.className = 'bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-all text-sm flex items-center gap-2';
-    exportBtn.addEventListener('click', exportarDatos);
-    
-    // Botón de importar
-    const importBtn = document.createElement('button');
-    importBtn.innerHTML = '<ion-icon name="upload-outline"></ion-icon> Importar';
-    importBtn.className = 'bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-all text-sm flex items-center gap-2';
-    
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
-    fileInput.style.display = 'none';
-    fileInput.addEventListener('change', importarDatos);
-    
-    importBtn.addEventListener('click', () => fileInput.click());
-    
-    backupContainer.appendChild(exportBtn);
-    backupContainer.appendChild(importBtn);
-    backupContainer.appendChild(fileInput);
-    
-    document.body.appendChild(backupContainer);
-};
+// ============================================
+// FUNCIONALIDAD DE EXPORTAR / IMPORTAR DATOS
+// ============================================
 
+// Variable para almacenar temporalmente los datos a importar
+let datosParaImportar = null;
+
+// Función para exportar todos los datos del localStorage
 const exportarDatos = () => {
     const datos = {
+        version: '1.0',
+        appName: 'presupuesto-app',
         ingresos: ingresos.map(ing => ({
             id: ing.id,
             descripcion: ing.descripcion,
@@ -563,61 +560,236 @@ const exportarDatos = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    // Notificar al usuario
-    alert('Datos exportados exitosamente');
+    // Notificación de éxito
+    mostrarNotificacion('Datos exportados exitosamente', 'success');
 };
 
-const importarDatos = (event) => {
+// Función para abrir el selector de archivos
+const abrirImportador = () => {
+    const fileInput = document.getElementById('import-file-input');
+    fileInput.value = ''; // Limpiar selección previa
+    fileInput.click();
+};
+
+// Función para validar el formato del archivo JSON
+const validarFormatoJSON = (datos) => {
+    const errores = [];
+    
+    // Verificar que sea un objeto
+    if (typeof datos !== 'object' || datos === null) {
+        errores.push('El archivo no contiene un objeto JSON válido');
+        return { valido: false, errores };
+    }
+    
+    // Verificar estructura básica
+    if (!datos.hasOwnProperty('ingresos')) {
+        errores.push('Falta el campo "ingresos"');
+    } else if (!Array.isArray(datos.ingresos)) {
+        errores.push('El campo "ingresos" debe ser un array');
+    } else {
+        // Validar cada ingreso
+        datos.ingresos.forEach((ing, idx) => {
+            if (typeof ing.descripcion !== 'string') {
+                errores.push(`Ingreso ${idx + 1}: falta "descripcion" o no es texto`);
+            }
+            if (typeof ing.valor !== 'number' || ing.valor < 0) {
+                errores.push(`Ingreso ${idx + 1}: "valor" debe ser un número positivo`);
+            }
+        });
+    }
+    
+    if (!datos.hasOwnProperty('egresos')) {
+        errores.push('Falta el campo "egresos"');
+    } else if (!Array.isArray(datos.egresos)) {
+        errores.push('El campo "egresos" debe ser un array');
+    } else {
+        // Validar cada egreso
+        datos.egresos.forEach((eg, idx) => {
+            if (typeof eg.descripcion !== 'string') {
+                errores.push(`Egreso ${idx + 1}: falta "descripcion" o no es texto`);
+            }
+            if (typeof eg.valor !== 'number' || eg.valor < 0) {
+                errores.push(`Egreso ${idx + 1}: "valor" debe ser un número positivo`);
+            }
+        });
+    }
+    
+    return {
+        valido: errores.length === 0,
+        errores
+    };
+};
+
+// Función que se ejecuta al seleccionar un archivo
+const validarArchivoImportacion = (event) => {
     const file = event.target.files[0];
-    if(!file) return;
+    if (!file) return;
     
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
+            // Intentar parsear el JSON
             const datos = JSON.parse(e.target.result);
             
-            if(confirm('¿Estás seguro de importar estos datos? Se reemplazarán los datos actuales.')){
-                // Limpiar datos actuales
-                ingresos.length = 0;
-                egresos.length = 0;
-                
-                // Importar nuevos datos
-                if(datos.contadorIngresos !== undefined){
-                    Ingreso.contadorIngresos = datos.contadorIngresos;
+            // Validar el formato
+            const validacion = validarFormatoJSON(datos);
+            
+            if (!validacion.valido) {
+                // Mostrar errores de validación
+                let mensajeError = 'El archivo tiene un formato inválido:\n\n';
+                mensajeError += validacion.errores.slice(0, 5).join('\n');
+                if (validacion.errores.length > 5) {
+                    mensajeError += `\n... y ${validacion.errores.length - 5} error(es) más`;
                 }
-                if(datos.contadorEgresos !== undefined){
-                    Egreso.contadorEgresos = datos.contadorEgresos;
-                }
-                
-                if(datos.ingresos && Array.isArray(datos.ingresos)){
-                    datos.ingresos.forEach(item => {
-                        const ingreso = new Ingreso(item.descripcion, item.valor);
-                        ingreso._id = item.id;
-                        ingresos.push(ingreso);
-                    });
-                }
-                
-                if(datos.egresos && Array.isArray(datos.egresos)){
-                    datos.egresos.forEach(item => {
-                        const egreso = new Egreso(item.descripcion, item.valor);
-                        egreso._id = item.id;
-                        egresos.push(egreso);
-                    });
-                }
-                
-                // Guardar y actualizar interfaz
-                guardarEnLocalStorage();
-                cargarCabecero();
-                cargarIngresos();
-                cargarEgresos();
-                
-                alert('Datos importados exitosamente');
+                mostrarNotificacion(mensajeError, 'error');
+                return;
             }
-        } catch(error) {
-            alert('Error al importar los datos. Verifica que el archivo sea válido.');
-            console.error('Error importando datos:', error);
+            
+            // Guardar datos temporalmente y mostrar modal de confirmación
+            datosParaImportar = datos;
+            mostrarModalConfirmacion(datos);
+            
+        } catch (error) {
+            mostrarNotificacion('Error: El archivo no es un JSON válido', 'error');
+            console.error('Error parseando JSON:', error);
         }
     };
     
     reader.readAsText(file);
+};
+
+// Función para mostrar el modal de confirmación
+const mostrarModalConfirmacion = (datos) => {
+    const modal = document.getElementById('modal-importar');
+    
+    // Actualizar conteos de datos a importar
+    document.getElementById('import-ingresos-count').textContent = datos.ingresos ? datos.ingresos.length : 0;
+    document.getElementById('import-egresos-count').textContent = datos.egresos ? datos.egresos.length : 0;
+    
+    // Actualizar conteos de datos actuales
+    document.getElementById('current-ingresos-count').textContent = ingresos.length;
+    document.getElementById('current-egresos-count').textContent = egresos.length;
+    
+    // Mostrar modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Prevenir scroll del body
+    document.body.style.overflow = 'hidden';
+};
+
+// Función para cerrar el modal
+const cerrarModalImportar = () => {
+    const modal = document.getElementById('modal-importar');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+    datosParaImportar = null;
+};
+
+// Función para confirmar y ejecutar la importación
+const confirmarImportacion = () => {
+    if (!datosParaImportar) {
+        cerrarModalImportar();
+        return;
+    }
+    
+    const datos = datosParaImportar;
+    
+    // Limpiar datos actuales
+    ingresos.length = 0;
+    egresos.length = 0;
+    
+    // Restaurar contadores
+    if (datos.contadorIngresos !== undefined) {
+        Ingreso.contadorIngresos = datos.contadorIngresos;
+    } else {
+        Ingreso.contadorIngresos = 0;
+    }
+    
+    if (datos.contadorEgresos !== undefined) {
+        Egreso.contadorEgresos = datos.contadorEgresos;
+    } else {
+        Egreso.contadorEgresos = 0;
+    }
+    
+    // Importar ingresos
+    if (datos.ingresos && Array.isArray(datos.ingresos)) {
+        datos.ingresos.forEach(item => {
+            const ingreso = new Ingreso(item.descripcion, item.valor);
+            if (item.id !== undefined) {
+                ingreso._id = item.id;
+                if (item.id > Ingreso.contadorIngresos) {
+                    Ingreso.contadorIngresos = item.id;
+                }
+            }
+            ingresos.push(ingreso);
+        });
+    }
+    
+    // Importar egresos
+    if (datos.egresos && Array.isArray(datos.egresos)) {
+        datos.egresos.forEach(item => {
+            const egreso = new Egreso(item.descripcion, item.valor);
+            if (item.id !== undefined) {
+                egreso._id = item.id;
+                if (item.id > Egreso.contadorEgresos) {
+                    Egreso.contadorEgresos = item.id;
+                }
+            }
+            egresos.push(egreso);
+        });
+    }
+    
+    // Guardar y actualizar interfaz
+    guardarEnLocalStorage();
+    cargarCabecero();
+    cargarIngresos();
+    cargarEgresos();
+    
+    // Cerrar modal y mostrar notificación
+    cerrarModalImportar();
+    mostrarNotificacion('Datos importados exitosamente', 'success');
+};
+
+// Función para mostrar notificaciones
+const mostrarNotificacion = (mensaje, tipo = 'info') => {
+    // Crear elemento de notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-xl shadow-2xl text-white font-medium z-50 max-w-md text-center transition-all duration-300 backdrop-blur-sm`;
+    
+    // Aplicar estilos según el tipo
+    if (tipo === 'success') {
+        notificacion.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        notificacion.innerHTML = `<div class="flex items-center gap-3"><ion-icon name="checkmark-circle-outline" class="text-2xl"></ion-icon><span>${mensaje}</span></div>`;
+    } else if (tipo === 'error') {
+        notificacion.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+        notificacion.innerHTML = `<div class="flex items-start gap-3"><ion-icon name="alert-circle-outline" class="text-2xl flex-shrink-0"></ion-icon><span class="text-left text-sm whitespace-pre-line">${mensaje}</span></div>`;
+    } else {
+        notificacion.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        notificacion.innerHTML = `<div class="flex items-center gap-3"><ion-icon name="information-circle-outline" class="text-2xl"></ion-icon><span>${mensaje}</span></div>`;
+    }
+    
+    document.body.appendChild(notificacion);
+    
+    // Animar entrada
+    notificacion.style.opacity = '0';
+    notificacion.style.transform = 'translate(-50%, -20px)';
+    
+    setTimeout(() => {
+        notificacion.style.opacity = '1';
+        notificacion.style.transform = 'translate(-50%, 0)';
+    }, 10);
+    
+    // Auto-cerrar después de un tiempo (más largo para errores)
+    const duracion = tipo === 'error' ? 6000 : 3000;
+    setTimeout(() => {
+        notificacion.style.opacity = '0';
+        notificacion.style.transform = 'translate(-50%, -20px)';
+        setTimeout(() => {
+            if (notificacion.parentNode) {
+                notificacion.parentNode.removeChild(notificacion);
+            }
+        }, 300);
+    }, duracion);
 };
