@@ -24,6 +24,7 @@
   background: rgba(21, 27, 61, 0.6);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
 }
 
 /* Sombras suaves para profundidad */
@@ -46,4 +47,135 @@
 /* Ocultar scrollbar en Chrome, Safari y Opera */
 .scroll-container::-webkit-scrollbar {
   display: none;
+}
+
+/* Select personalizado - Base */
+.custom-select {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  user-select: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.custom-select:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.custom-select:focus {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* Iconos */
+.select-icon-current {
+  color: #10b981;
+  transition: color 0.3s ease;
+}
+
+.select-arrow {
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.custom-select.open .select-arrow {
+  transform: rotate(180deg);
+}
+
+/* Modo Egreso */
+.custom-select[data-type="egreso"] {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+}
+
+.custom-select[data-type="egreso"]:hover {
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.custom-select[data-type="egreso"] .select-icon-current {
+  color: #ef4444;
+}
+
+/* Dropdown */
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(21, 27, 61, 0.98);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.custom-select-dropdown.show {
+  display: block;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Opciones */
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.custom-select-option:first-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.custom-select-option:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.98);
+}
+
+.custom-select-option ion-icon {
+  transition: transform 0.2s ease;
+}
+
+.custom-select-option:hover ion-icon {
+  transform: scale(1.1);
+}
+
+/* Colores específicos para cada opción */
+.custom-select-option[data-value="ingreso"] ion-icon {
+  color: #10b981;
+}
+
+.custom-select-option[data-value="egreso"] ion-icon {
+  color: #ef4444;
+}
+
+.custom-select-option span {
+  color: white;
+  font-size: 15px;
 }

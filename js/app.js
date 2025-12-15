@@ -92,11 +92,75 @@ let cargarApp = ()=>{
         this.placeholder = '$ Valor';
     });
     
+    // Inicializar select personalizado
+    inicializarSelectCustom();
+    
     // Manejar shortcuts de la PWA
     manejarShortcuts();
     
     // Inicializar funcionalidad PWA
     inicializarPWA();
+}
+
+// Función para inicializar el select personalizado
+const inicializarSelectCustom = ()=>{
+    const customSelect = document.getElementById('tipo-custom');
+    const dropdown = document.getElementById('tipo-dropdown');
+    const selectOculto = document.getElementById('tipo');
+    const opciones = dropdown.querySelectorAll('.custom-select-option');
+    
+    // Toggle dropdown al hacer clic en el select
+    customSelect.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+        customSelect.classList.toggle('open');
+    });
+    
+    // Manejar selección de opción
+    opciones.forEach(opcion => {
+        opcion.addEventListener('click', (e)=>{
+            e.stopPropagation();
+            const valor = opcion.getAttribute('data-value');
+            const texto = opcion.querySelector('span').textContent;
+            const iconName = opcion.querySelector('ion-icon').getAttribute('name');
+            
+            // Actualizar el select oculto
+            selectOculto.value = valor;
+            
+            // Actualizar el texto e icono del select visual
+            customSelect.querySelector('.select-text').textContent = texto;
+            const iconoActual = customSelect.querySelector('.select-icon-current');
+            iconoActual.setAttribute('name', iconName);
+            
+            // Actualizar el estilo según el tipo
+            if(valor === 'egreso'){
+                customSelect.setAttribute('data-type', 'egreso');
+            } else {
+                customSelect.removeAttribute('data-type');
+            }
+            
+            // Cerrar el dropdown
+            dropdown.classList.remove('show');
+            customSelect.classList.remove('open');
+        });
+    });
+    
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', ()=>{
+        dropdown.classList.remove('show');
+        customSelect.classList.remove('open');
+    });
+    
+    // Manejar teclado (Enter y Escape)
+    customSelect.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            customSelect.click();
+        } else if(e.key === 'Escape'){
+            dropdown.classList.remove('show');
+            customSelect.classList.remove('open');
+        }
+    });
 }
 
 let totalIngresos = ()=>{
@@ -283,13 +347,24 @@ const manejarShortcuts = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const action = urlParams.get('action');
     
+    const customSelect = document.getElementById('tipo-custom');
+    const selectOculto = document.getElementById('tipo');
+    
     if(action === 'add_income'){
         // Preseleccionar ingreso
-        document.getElementById('tipo').value = 'ingreso';
+        selectOculto.value = 'ingreso';
+        customSelect.querySelector('.select-text').textContent = 'Ingreso';
+        const iconoActual = customSelect.querySelector('.select-icon-current');
+        iconoActual.setAttribute('name', 'trending-up-outline');
+        customSelect.removeAttribute('data-type');
         document.getElementById('descripcion').focus();
     } else if(action === 'add_expense'){
         // Preseleccionar egreso
-        document.getElementById('tipo').value = 'egreso';
+        selectOculto.value = 'egreso';
+        customSelect.querySelector('.select-text').textContent = 'Egreso';
+        const iconoActual = customSelect.querySelector('.select-icon-current');
+        iconoActual.setAttribute('name', 'trending-down-outline');
+        customSelect.setAttribute('data-type', 'egreso');
         document.getElementById('descripcion').focus();
     }
 };

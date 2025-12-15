@@ -115,15 +115,41 @@
     </div>
 
     <!-- Formulario de entrada con diseño elegante -->
-    <form id='forma' onsubmit="return false;" class="py-8 md:py-10" style="background-color: #0a0e27;">
+    <form id='forma' onsubmit="return false;" class="py-8 md:py-10 relative z-50" style="background-color: #0a0e27;">
         <div class="max-w-4xl mx-auto px-4">
             <div class="glass-card rounded-xl p-6 md:p-8 shadow-elegant">
                 <h2 class="text-white text-lg md:text-xl font-light mb-6 text-center tracking-wide">Nueva Transacción</h2>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
-                    <select class='w-auto border-2 h-12 text-base rounded-lg px-3 font-light transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/10 text-white backdrop-blur-sm' id='tipo'>
-                        <option value='ingreso' style="background-color: #151b3d; color: white;">+ Ingreso</option>
-                        <option value='egreso' style="background-color: #151b3d; color: white;">- Egreso</option>
+                    <!-- Select nativo oculto para mantener la funcionalidad del formulario -->
+                    <select id='tipo' style="display: none;">
+                        <option value='ingreso'>Ingreso</option>
+                        <option value='egreso'>Egreso</option>
                     </select>
+                    
+                    <!-- Select personalizado visual -->
+                    <div class="relative w-full sm:w-auto" style="min-width: 180px;">
+                        <div class='custom-select h-12 px-4 text-base rounded-lg font-medium transition-all cursor-pointer' id='tipo-custom' tabindex="0">
+                            <div class="flex items-center justify-between h-full">
+                                <div class="flex items-center gap-2">
+                                    <ion-icon name="trending-up-outline" class="text-xl select-icon-current"></ion-icon>
+                                    <span class="select-text text-white">Ingreso</span>
+                                </div>
+                                <ion-icon name="chevron-down-outline" class="text-base select-arrow"></ion-icon>
+                            </div>
+                        </div>
+                        
+                        <!-- Dropdown de opciones -->
+                        <div class="custom-select-dropdown" id="tipo-dropdown">
+                            <div class="custom-select-option" data-value="ingreso">
+                                <ion-icon name="trending-up-outline" class="text-xl"></ion-icon>
+                                <span>Ingreso</span>
+                            </div>
+                            <div class="custom-select-option" data-value="egreso">
+                                <ion-icon name="trending-down-outline" class="text-xl"></ion-icon>
+                                <span>Egreso</span>
+                            </div>
+                        </div>
+                    </div>
                     <input 
                         type='text' 
                         class='sm:flex-1 sm:max-w-md border-2 h-12 text-sm px-4 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/10 text-white placeholder-gray-400 backdrop-blur-sm'
