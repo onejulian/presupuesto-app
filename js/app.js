@@ -98,8 +98,15 @@ let cargarApp = () => {
     // Manejar shortcuts de la PWA
     manejarShortcuts();
 
-    // Inicializar funcionalidad PWA
+    // Inicializar functionality PWA
     inicializarPWA();
+
+    // Inicializar select personalizado de la edición
+    inicializarSelectEdit();
+
+    // Event listener para formateo en el modal de edición
+    const editInputValor = document.getElementById('edit-valor');
+    editInputValor.addEventListener('input', formatearInputValor);
 }
 
 // Función para inicializar el select personalizado
@@ -161,6 +168,53 @@ const inicializarSelectCustom = () => {
             customSelect.classList.remove('open');
         }
     });
+}
+
+// Función para inicializar el select personalizado del modal de edición
+const inicializarSelectEdit = () => {
+    const customSelect = document.getElementById('edit-tipo-custom');
+    const dropdown = document.getElementById('edit-tipo-dropdown');
+    const selectOculto = document.getElementById('edit-tipo');
+    const opciones = dropdown.querySelectorAll('.custom-select-option');
+
+    customSelect.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+        customSelect.classList.toggle('open');
+    });
+
+    opciones.forEach(opcion => {
+        opcion.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const valor = opcion.getAttribute('data-value');
+            const texto = opcion.querySelector('span').textContent;
+            const iconName = opcion.querySelector('ion-icon').getAttribute('name');
+
+            selectOculto.value = valor;
+            actualizarInterfazSelectEdit(valor, texto, iconName);
+
+            dropdown.classList.remove('show');
+            customSelect.classList.remove('open');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        dropdown.classList.remove('show');
+        customSelect.classList.remove('open');
+    });
+}
+
+const actualizarInterfazSelectEdit = (valor, texto, iconName) => {
+    const customSelect = document.getElementById('edit-tipo-custom');
+    customSelect.querySelector('.edit-select-text').textContent = texto;
+    const iconoActual = customSelect.querySelector('.edit-select-icon-current');
+    iconoActual.setAttribute('name', iconName);
+
+    if (valor === 'egreso') {
+        customSelect.setAttribute('data-type', 'egreso');
+    } else {
+        customSelect.removeAttribute('data-type');
+    }
 }
 
 let totalIngresos = () => {
@@ -259,6 +313,9 @@ const crearIngresoHTML = (ingreso) => {
         </div>
         <div class="flex items-center gap-3">
             <div class="text-emerald-400 font-medium transition-all group-hover:scale-110 group-hover:text-emerald-300">+ ${formatoMoneda(ingreso.valor)}</div>
+            <button class='flex md:hidden md:group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
+                <ion-icon name="create-outline" onclick='abrirEditarTransaccion("ingreso", ${ingreso.id})'></ion-icon>
+            </button>
             <button class='flex md:hidden md:group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
                 <ion-icon name="trash-outline" onclick='eliminarIngreso(${ingreso.id})'></ion-icon>
             </button>
@@ -294,6 +351,9 @@ const crearEgresoHTML = (egreso) => {
         <div class="flex items-center gap-3">
             <div class="text-red-400 font-medium transition-all group-hover:scale-110 group-hover:text-red-300">- ${formatoMoneda(egreso.valor)}</div>
             <div class="text-xs bg-red-500/20 text-red-300 py-1 px-2 rounded-md min-w-[3rem] text-center font-medium">${formatoPorcentaje(egreso.valor / totalIngresos())}</div>
+            <button class='flex md:hidden md:group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
+                <ion-icon name="create-outline" onclick='abrirEditarTransaccion("egreso", ${egreso.id})'></ion-icon>
+            </button>
             <button class='flex md:hidden md:group-hover:flex w-8 h-8 items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition-all cursor-pointer focus:outline-none active:scale-95'>
                 <ion-icon name="trash-outline" onclick='eliminarEgreso(${egreso.id})'></ion-icon>
             </button>
@@ -341,6 +401,91 @@ let limpiarFormulario = () => {
     const tipoActual = document.getElementById('tipo').value;
     document.getElementById('forma').reset();
     document.getElementById('tipo').value = tipoActual;
+}
+
+// Funciones para Editar Transacción
+const abrirEditarTransaccion = (tipo, id) => {
+    let transaccion;
+    if (tipo === 'ingreso') {
+        transaccion = ingresos.find(ing => ing.id === id);
+    } else {
+        transaccion = egresos.find(eg => eg.id === id);
+    }
+
+    if (!transaccion) return;
+
+    // Poblar campos
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-tipo-original').value = tipo;
+    document.getElementById('edit-tipo').value = tipo;
+    document.getElementById('edit-descripcion').value = transaccion.descripcion;
+
+    // Formatear el valor para el input
+    const inputValor = document.getElementById('edit-valor');
+    inputValor.value = transaccion.valor.toLocaleString('es-CO');
+
+    // Actualizar select visual
+    const texto = tipo === 'ingreso' ? 'Ingreso' : 'Egreso';
+    const iconName = tipo === 'ingreso' ? 'trending-up-outline' : 'trending-down-outline';
+    actualizarInterfazSelectEdit(tipo, texto, iconName);
+
+    // Mostrar modal
+    const modal = document.getElementById('modal-editar');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+
+const cerrarModalEditar = () => {
+    const modal = document.getElementById('modal-editar');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+}
+
+const guardarEdicion = () => {
+    const id = parseInt(document.getElementById('edit-id').value);
+    const tipoOriginal = document.getElementById('edit-tipo-original').value;
+    const nuevoTipo = document.getElementById('edit-tipo').value;
+    const nuevaDescripcion = document.getElementById('edit-descripcion').value;
+    const nuevoValorText = document.getElementById('edit-valor').value;
+    const nuevoValor = parsearValor(nuevoValorText);
+
+    if (nuevaDescripcion === '' || nuevoValor <= 0) {
+        mostrarNotificacion('Por favor completa todos los campos correctamente', 'error');
+        return;
+    }
+
+    if (tipoOriginal === nuevoTipo) {
+        // Actualizar en el mismo array
+        if (nuevoTipo === 'ingreso') {
+            const index = ingresos.findIndex(ing => ing.id === id);
+            ingresos[index].descripcion = nuevaDescripcion;
+            ingresos[index].valor = nuevoValor;
+        } else {
+            const index = egresos.findIndex(eg => eg.id === id);
+            egresos[index].descripcion = nuevaDescripcion;
+            egresos[index].valor = nuevoValor;
+        }
+    } else {
+        // Cambió el tipo: eliminar de uno y agregar al otro
+        if (tipoOriginal === 'ingreso') {
+            const index = ingresos.findIndex(ing => ing.id === id);
+            ingresos.splice(index, 1);
+            egresos.push(new Egreso(nuevaDescripcion, nuevoValor));
+        } else {
+            const index = egresos.findIndex(eg => eg.id === id);
+            egresos.splice(index, 1);
+            ingresos.push(new Ingreso(nuevaDescripcion, nuevoValor));
+        }
+    }
+
+    guardarEnLocalStorage();
+    cargarCabecero();
+    cargarIngresos();
+    cargarEgresos();
+    cerrarModalEditar();
+    mostrarNotificacion('Transacción actualizada correctamente', 'success');
 }
 
 // Función para manejar shortcuts de la PWA
